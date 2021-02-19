@@ -206,7 +206,36 @@
           form.style.display = "block";
           idInput.style.display = "block";
         }else{
-          //TODO
+          let author = document.getElementById('author').value;
+          let title = document.getElementById('title').value;
+          let id = document.getElementById('recordID').value;
+          fetch(endpoint+"/"+id, {
+            method: 'put',
+            headers: {
+              "Content-type" : 'application/json'
+            },
+            body: JSON.stringify({
+              "author" : author,
+              "title" : title
+            })
+          })
+          .then(
+            function(response){
+
+              if(response.status >=400){
+                output.innerHTML = response.statusText +" " + response.status;
+                return;
+              }
+
+              response.json().then(function(data){
+                output.innerHTML = JSON.stringify(data);
+              });
+            }
+          ).catch(
+            function(err) {
+              output.innerHTML = JSON.stringify(err);
+            }
+          );
         }
       }
 
@@ -216,7 +245,37 @@
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
       // delete all, only delete one.
       function deleteRecord() {
-        // TODO
+        let form = document.getElementById("recordForm");
+        let idInput = document.getElementById('recordIDcontainer');
+        form.style.display = "none";
+        idInput.style.display = "none";
+        let output = document.getElementById('output');
+        let end = document.getElementById('endpoint');
+        let endpoint = end.value;
+        let id = window.prompt("Enter record id");
+        fetch(endpoint+"/"+id, {
+          method: 'delete',
+          headers: {
+            "Content-type" : 'application/json'
+          }
+        })
+          .then(
+            function(response){
+
+              if(response.status >=400){
+                output.innerHTML = response.statusText +" " + response.status;
+                return;
+              }
+
+              response.json().then(function(data){
+                output.innerHTML = JSON.stringify(data);
+              });
+            }
+          ).catch(
+            function(err) {
+              output.innerHTML = JSON.stringify(err);
+            }
+          );
       }
 
       window.addEventListener('DOMContentLoaded', () => {
